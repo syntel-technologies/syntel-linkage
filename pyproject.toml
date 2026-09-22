@@ -8,11 +8,28 @@ version = "0.1.0"
 description = "Probabilistic record linkage by the Fellegi-Sunter method, in the standard library"
 readme = "README.md"
 requires-python = ">=3.13,<3.15"
-license = { text = "Apache-2.0" }
+# An SPDX expression (PEP 639), not the deprecated table form, and the files that carry it are
+# declared so they travel in the wheel. The repository claimed Apache-2.0 while `LICENSE` held
+# only the seventeen-line header notice, so GitHub reported the project as unlicensed and a
+# consumer received a package asserting terms it did not ship.
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
 authors = [{ name = "Syntel Technologies" }]
+keywords = ["record-linkage", "fellegi-sunter", "entity-resolution", "deduplication"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+    "Typing :: Typed",
+]
 # No runtime dependencies. The arithmetic is standard-library only, which is the point: this
 # package exists so a service can link records without inheriting a copyleft closure.
 dependencies = []
+
+[project.urls]
+Source = "https://github.com/syntel-technologies/syntel-linkage"
+Issues = "https://github.com/syntel-technologies/syntel-linkage/issues"
 
 [dependency-groups]
 dev = [
