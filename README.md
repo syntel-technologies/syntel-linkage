@@ -2,6 +2,58 @@
 
 Probabilistic record linkage by the Fellegi-Sunter method, in the standard library.
 
+## Install
+
+```bash
+pip install syntel-linkage
+```
+
+Python 3.13+. No dependencies.
+
+## Usage
+
+```python
+from syntel_linkage import link
+
+left = [
+    {"unique_id": "L1", "postcode": "AD1 2XY", "surname": "haddad", "given": "layla"},
+    {"unique_id": "L2", "postcode": "AD1 2XY", "surname": "nasser", "given": "omar"},
+    {"unique_id": "L3", "postcode": "AD3 9QQ", "surname": "khoury", "given": "rami"},
+]
+right = [
+    {"unique_id": "R1", "postcode": "AD1 2XY", "surname": "haddad", "given": "layla"},
+    {"unique_id": "R2", "postcode": "AD1 2XY", "surname": "haddad", "given": "yusuf"},
+    {"unique_id": "R3", "postcode": "AD3 9QQ", "surname": "khoury", "given": "rami"},
+]
+
+result = link(
+    left,
+    right,
+    blocking_keys=["postcode"],
+    comparison_fields=["surname", "given"],
+    threshold=0.5,
+)
+
+for p in result.predictions:
+    print(f"{p.left_id} ~ {p.right_id}  weight={p.weight:+.2f}  posterior={p.probability:.3f}")
+
+print("m trained by:", result.training.method_m)
+print("untrainable :", result.training.untrainable)
+```
+
+```text
+L1 ~ R1  weight=+23.49  posterior=1.000
+L3 ~ R3  weight=+23.49  posterior=1.000
+
+m trained by: default (only 5 candidate pairs)
+untrainable : ('postcode',)
+```
+
+Note the last two lines, which are the point of the library as much as the first two. Six records
+do not contain enough evidence to learn m from, so it says so instead of returning a number that
+looks trained. And `postcode` is a blocking key, so inside a block it always agrees and carries no
+information — naming it is more useful than scoring it.
+
 ## Why this exists
 
 Syntel's products need to decide whether a record in one system and a record in another describe
